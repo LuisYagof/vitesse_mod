@@ -1,15 +1,58 @@
 <script setup lang="ts">
-// https://github.com/vueuse/head
-// you can use this to manipulate the document head in any components,
-// they will be rendered correctly in the html results with vite-ssg
-useHead({
-  title: 'Vitesse',
-  meta: [
-    { name: 'description', content: 'Opinionated Vite Starter Template' },
-  ],
-})
+import Navbar from './shared/wrapper/Navbar.vue';
+import Sidebar from './shared/wrapper/Sidebar.vue';
+
+const emits = defineEmits(['catchevent']); // el nombre del evento no permite camelCase, PascalCase, kebab-case
+
+const catchEmit = (emission: string) => {
+  console.info(emission);
+  // (DO STH WITH EMISSION)
+}
+
 </script>
 
 <template>
-  <router-view />
+  <Navbar />
+
+  <div class="wrapper__content">
+    <Sidebar />
+
+    <div class="router-view">
+      <router-view v-slot="{ Component, route }">
+        <!-- <keep-alive> -->
+        <component :is="Component" :key="route.name" @catchevent="catchEmit" />
+        <!-- </keep-alive> -->
+      </router-view>
+    </div>
+
+  </div>
 </template>
+
+<style>
+#app {
+  font-family: 'Nunito';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  height: 100%;
+}
+
+div.wrapper__content {
+  height: 100%;
+  /* min-height: 100%; */
+  min-height: 40.975rem;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  /* padding-top: 4.6875rem; */
+}
+
+div.router-view{
+  overflow-y: auto;
+  padding: 1rem 1rem 1rem 3rem;
+  flex: 1;
+}
+
+</style>
